@@ -1,0 +1,19 @@
+- [x] Edit Hero.js: Remove login condition, always show "Shop Now" button, remove login message
+- [x] Delete GoogleLoginButton.js
+- [x] Edit Hero.js: Redirect to signup/login before allowing shopping
+- [x] Edit ContactPage.js: Change phone to +62 856 9625 6729, address to desa pulutan kec.remboken kab.minahasa
+- [x] Edit ContactPage.js: Format address neatly, add postal code
+- [x] Edit Header.js: Change "Login" to "Sign In / Sign Up", position to top right
+- [x] Create LoginPage.js with sign in/sign up functionality
+- [x] Add /login route in App.js
+- [x] Update Header.js link to /login
+- [x] Create attractive login and signup forms
+- [ ] Setup backend API endpoints for product listing
+- [ ] Connect frontend to backend API
+- [ ] Implement product listing from backend
+- [x] Implement login functionality using Supabase auth
+- [x] Implement signup functionality using Supabase auth
+- [x] Create user profile management page
+- [x] Integrate auth state management across frontend
+- [x] Add protected routes for user profile
+- [x] Add Google login functionality
