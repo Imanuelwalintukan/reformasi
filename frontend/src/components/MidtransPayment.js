@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { convertToRupiah } from '../utils/currencyFormatter';
-import midtransConfig from '../config/midtransConfig';
 import './MidtransPayment.css';
 
 const MidtransPayment = ({ 
@@ -11,11 +10,51 @@ const MidtransPayment = ({
   onCancel 
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [scriptError, setScriptError] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('gopay'); // Default payment method
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
 
+  // Load Midtrans Snap script dynamically
+  useEffect(() => {
+    // Check if script is already loaded
+    if (window.snap) {
+      setScriptLoaded(true);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
+    script.setAttribute('data-client-key', process.env.REACT_APP_MIDTRANS_CLIENT_KEY || 'Mid-client-o7lFKhedQ-2GDdx0');
+    script.async = true;
+    
+    script.onload = () => {
+      console.log('Midtrans Snap script loaded successfully');
+      setScriptLoaded(true);
+    };
+    
+    script.onerror = () => {
+      console.error('Failed to load Midtrans Snap script');
+      setScriptError(true);
+      setScriptLoaded(false);
+    };
+    
+    document.body.appendChild(script);
+
+    // Cleanup function to remove script
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   // Create Midtrans payment process using backend API
   const handlePayment = async () => {
+    // Check if script is loaded before proceeding
+    if (!scriptLoaded) {
+      alert('Payment system is not ready yet. Please try again in a moment.');
+      return;
+    }
+    
     setIsProcessing(true);
     
     try {
@@ -57,37 +96,85 @@ const MidtransPayment = ({
 
       console.log('Midtrans transaction created:', result);
 
-      // For now, we'll simulate the payment process
-      // In a real implementation, we would redirect to result.redirectUrl
-      // or initialize Snap payment with result.transactionToken
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Simulate 80% success rate for dummy payment
-      const isSuccess = Math.random() > 0.2;
-
-      if (isSuccess) {
-        // Simulate successful payment response
-        const paymentResponse = {
-          transactionId: result.orderId,
-          paymentMethod: paymentMethod,
-          amount: totalAmount,
-          status: 'settlement',
-          orderId: result.orderId,
-          ...orderDetails
-        };
-        
-        onPaymentSuccess(paymentResponse);
+      // Initialize Snap payment
+      if (window.snap) {
+        window.snap.show({
+          token: result.transactionToken,
+          onSuccess: function(resultData) {
+            console.log('Payment Success:', resultData);
+            setIsProcessing(false);
+            
+            // Process successful payment
+            const paymentResponse = {
+              transactionId: resultData.transaction_id,
+              paymentMethod: resultData.payment_type,
+              amount: resultData.gross_amount,
+              status: resultData.transaction_status,
+              orderId: resultData.order_id,
+              ...orderDetails,
+              ...resultData
+            };
+            
+            onPaymentSuccess(paymentResponse);
+          },
+          onPending: function(resultData) {
+            console.log('Payment Pending:', resultData);
+            setIsProcessing(false);
+            
+            // Handle pending payment (e.g., bank transfer)
+            const paymentResponse = {
+              transactionId: resultData.transaction_id,
+              paymentMethod: resultData.payment_type,
+              amount: resultData.gross_amount,
+              status: resultData.transaction_status,
+              orderId: resultData.order_id,
+              ...orderDetails,
+              ...resultData
+            };
+            
+            onPaymentSuccess(paymentResponse);
+          },
+          onError: function(resultData) {
+            console.log('Payment Error:', resultData);
+            setIsProcessing(false);
+            
+            // Handle payment failure
+            onPaymentFailure({
+              error: resultData.status_message || 'Payment failed',
+              paymentMethod: resultData.payment_type || paymentMethod
+            });
+          },
+          onClose: function() {
+            console.log('Payment closed by user');
+            setIsProcessing(false);
+            
+            // Handle when user closes the popup
+            onPaymentFailure({
+              error: 'Payment cancelled by user',
+              paymentMethod: paymentMethod
+            });
+          }
+        });
       } else {
-        throw new Error('Payment failed. Please try again.');
+        throw new Error('Midtrans Snap is not available');
       }
     } catch (error) {
       console.error('Error processing Midtrans payment:', error);
+      
+      // More specific error handling
+      let errorMessage = 'Payment failed. Please try again.';
+      if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      // Menampilkan pesan error yang lebih spesifik
+      alert(`Payment Error: ${errorMessage}`);
+      
+      setIsProcessing(false);
       onPaymentFailure({
-        error: error.message || 'Payment failed. Please try again.',
+        error: errorMessage,
         paymentMethod: paymentMethod
       });
-    } finally {
-      setIsProcessing(false);
     }
   };
 
@@ -101,6 +188,21 @@ const MidtransPayment = ({
     { id: 'bri_va', name: 'BRI Virtual Account', icon: '🏦' },
     { id: 'mandiri_va', name: 'Mandiri Virtual Account', icon: '🏦' },
   ];
+
+  // Show error message if script failed to load
+  if (scriptError) {
+    return (
+      <div className="midtrans-payment">
+        <div className="payment-error">
+          <h3>Payment System Error</h3>
+          <p>Unable to load payment system. Please try again later or contact support.</p>
+          <button className="cancel-payment-btn" onClick={onCancel}>
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="midtrans-payment">
@@ -151,16 +253,16 @@ const MidtransPayment = ({
         <button 
           className="confirm-payment-btn" 
           onClick={handlePayment}
-          disabled={isProcessing}
+          disabled={isProcessing || !scriptLoaded}
         >
-          {isProcessing ? 'Processing...' : `Pay ${convertToRupiah(totalAmount)}`}
+          {!scriptLoaded ? 'Loading...' : isProcessing ? 'Processing...' : `Pay ${convertToRupiah(totalAmount)}`}
         </button>
       </div>
 
       {isProcessing && (
         <div className="payment-processing">
           <div className="spinner"></div>
-          <p>Processing payment via Midtrans...</p>
+          <p>Opening payment window...</p>
         </div>
       )}
     </div>

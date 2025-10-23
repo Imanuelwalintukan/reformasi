@@ -1,4 +1,5 @@
-const { midtransSnap } = require('../config/midtransConfig');
+const { midtransCoreApi, midtransSnap } = require('../config/midtransConfig');
+const { createOrderRecord, updateOrderStatusRecord } = require('./orderUtils');
 
 // Create a Midtrans transaction
 const createMidtransTransaction = async (req, res) => {
@@ -21,6 +22,21 @@ const createMidtransTransaction = async (req, res) => {
     };
 
     console.log('Creating Midtrans transaction:', parameter);
+
+    // First, create the order in our database
+    // Note: In a real implementation, you would need user authentication here
+    try {
+      await createOrderRecord({
+        order_id: order_id,
+        gross_amount: gross_amount,
+        customer_details: customer_details,
+        item_details: item_details,
+        status: 'pending'
+      });
+    } catch (orderError) {
+      console.error('Error creating order in database:', orderError);
+      // Don't fail the entire process if database insert fails, but log the error
+    }
 
     // Create transaction using Midtrans Snap API
     const transaction = await midtransSnap.createTransaction(parameter);
@@ -54,12 +70,24 @@ const handleMidtransNotification = async (req, res) => {
     const orderId = notification.order_id;
     const transactionStatus = notification.transaction_status;
     const fraudStatus = notification.fraud_status;
+    const paymentType = notification.payment_type;
+    const transactionId = notification.transaction_id;
 
-    // In a real application, you would:
-    // 1. Validate the notification using Midtrans API
-    // 2. Update your database based on the transaction status
-    // 3. Process the order based on payment status
-    // 4. Handle different transaction statuses (settlement, pending, cancel, etc.)
+    // In a real application, you would validate the notification using Midtrans API
+    // This is important for security to ensure the notification is genuine
+    
+    // Update the order status in database
+    try {
+      await updateOrderStatusRecord(orderId, {
+        status: transactionStatus,
+        transaction_id: transactionId,
+        payment_type: paymentType,
+        fraud_status: fraudStatus
+      });
+    } catch (updateError) {
+      console.error('Error updating order status in database:', updateError);
+      // Don't fail the notification if database update fails, but log the error
+    }
 
     // Process this asynchronously after sending response
     setTimeout(() => processNotification(notification), 0);

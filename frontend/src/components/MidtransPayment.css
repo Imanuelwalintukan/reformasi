@@ -160,6 +160,21 @@
   margin: 0;
 }
 
+.payment-error {
+  text-align: center;
+  padding: 20px;
+}
+
+.payment-error h3 {
+  color: #e74c3c;
+  margin-top: 0;
+}
+
+.payment-error p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
 @media (max-width: 768px) {
   .payment-header {
     flex-direction: column;
