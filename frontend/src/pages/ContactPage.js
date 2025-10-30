@@ -1,42 +1,39 @@
 import React from 'react';
+import './ContactPage.css';
 
 const ContactPage = () => {
   return (
-    <div className="contact-page">
-      <div className="container">
-        <h1>Contact Us</h1>
-        <p>Have questions about our products or need assistance with your order? We'd love to hear from you!</p>
-        
-        <div className="contact-info">
-          <h2>Get in Touch</h2>
-          <p><strong>Email:</strong> info@ebusinesscolorful.com</p>
-          <p><strong>Phone:</strong> +62 856 9625 6729</p>
-          <p><strong>Address:</strong> Desa Pulutan, Kecamatan Remboken, Kabupaten Minahasa, 95611</p>
+    <div className="contact-page-wrapper">
+      <div className="container contact-container">
+        <div className="contact-text-section">
+          <h1 className="contact-title">Connect with Us</h1>
+          <p className="contact-subtitle">
+            Whether you have a question about a piece, a story to share, or simply want to say hello, we're here to listen.
+          </p>
+          <div className="contact-details">
+            <p><strong>Email:</strong> ebusinessebusinesskelompok24@gmail.com</p>
+            <p><strong>Studio Location:</strong> Minahasa, Indonesia (By Appointment)</p>
+          </div>
+          <div className="contact-socials">
+            <a href="#">Instagram</a>
+            <a href="#">Pinterest</a>
+            <a href="#">Facebook</a>
+          </div>
         </div>
-        
-        <div className="contact-form">
-          <h2>Send us a Message</h2>
-          <form>
+        <div className="contact-form-section">
+          <form className="contact-form">
             <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input type="text" id="name" name="name" required />
+              <label htmlFor="name">Full Name</label>
+              <input type="text" id="name" name="name" placeholder="Your Name" required />
             </div>
-            
             <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input type="email" id="email" name="email" required />
+              <label htmlFor="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="your.email@example.com" required />
             </div>
-            
-            <div className="form-group">
-              <label htmlFor="subject">Subject</label>
-              <input type="text" id="subject" name="subject" required />
-            </div>
-            
             <div className="form-group">
               <label htmlFor="message">Message</label>
-              <textarea id="message" name="message" rows="5" required></textarea>
+              <textarea id="message" name="message" rows="6" placeholder="Tell us how we can help..." required></textarea>
             </div>
-            
             <button type="submit" className="submit-btn">Send Message</button>
           </form>
         </div>

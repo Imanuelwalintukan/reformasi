@@ -1,4 +1,5 @@
 import './App.css';
+import './animations.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/AuthContext';
 import { CartProvider } from './components/CartContext';

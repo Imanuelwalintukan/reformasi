@@ -1,0 +1,50 @@
+.about-page {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  color: #333;
+}
+
+.about-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.about-header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #B77466; /* Warm brown from your palette */
+}
+
+.about-header p {
+  font-size: 1.25rem;
+  color: #666;
+  font-style: italic;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.about-section h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #957C62; /* Rich brown from your palette */
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #E2B59A; /* Warm rose for accent */
+}
+
+.about-section p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+.about-section strong {
+  color: #B77466;
+  font-weight: 600;
+}

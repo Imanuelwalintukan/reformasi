@@ -1,13 +1,99 @@
-body {
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+/* 
+  Earthen Collective - Modern Gen Z Aesthetic
+  --------------------------------------------
+  Fonts:
+  - Lora: An elegant serif for headings to give a touch of sophistication.
+  - Inter: A clean, highly readable sans-serif for body text, perfect for UI.
+
+  Colors:
+  - A refined, earthy palette that feels warm, natural, and modern.
+*/
+
+:root {
+  --font-heading: 'Lora', serif;
+  --font-body: 'Inter', sans-serif;
+
+  --color-primary: #B77466; /* Warm, earthy brown */
+  --color-secondary: #E2B59A; /* Soft, warm rose */
+  --color-accent: #957C62; /* Rich, grounding brown */
+  --color-text: #4a4a4a; /* Dark grey for readability */
+  --color-background: #fdfcfb; /* A very light, almost white cream */
+  --color-highlight: #FFE1AF; /* Light tan for subtle highlights */
+  --color-white: #ffffff;
+
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+  --border-radius: 8px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-bottom: 1.25rem;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-primary);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* General button style */
+button, .button {
+  font-family: var(--font-body);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+button:hover, .button:hover {
+  background-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
 }

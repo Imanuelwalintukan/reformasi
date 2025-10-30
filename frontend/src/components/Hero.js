@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import './Hero.css';
 
 const Hero = () => {
   const { user } = useAuth();
@@ -19,9 +20,9 @@ const Hero = () => {
   return (
     <section className="hero">
       <div className="container">
-        <h2>Welcome to POT & GERABAH</h2>
-        <p>Discover our vibrant collection of beautifully crafted pots and ceramic items</p>
-        <button className="cta-button" onClick={handleShopNow}>Shop Now</button>
+        <h2 className="fade-in-up">Handcrafted Pottery for the Modern Soul</h2>
+        <p className="fade-in-up delay-1">Discover unique, artisanal earthenware that brings warmth and character to your space.</p>
+        <button className="cta-button fade-in-up delay-2" onClick={handleShopNow}>Shop Now</button>
       </div>
     </section>
   );

@@ -1,0 +1,84 @@
+.featured-artisan {
+  background-color: var(--color-white);
+  padding: 6rem 0;
+  margin: 3rem 0;
+}
+
+.featured-artisan .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 4rem;
+}
+
+.artisan-content {
+  grid-column: 1 / 2;
+  grid-row: 1;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-accent);
+  margin-bottom: 0.5rem;
+}
+
+.artisan-content h3 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.artisan-bio {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+/* Secondary button style for luxury feel */
+.cta-button.secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-secondary);
+}
+
+.cta-button.secondary:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+.artisan-image-wrapper {
+  grid-column: 2 / 3;
+  grid-row: 1;
+}
+
+.artisan-image-wrapper img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .featured-artisan .container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .artisan-image-wrapper {
+    grid-row: 1; /* Move image to the top on mobile */
+    margin-bottom: 2rem;
+  }
+
+  .artisan-content {
+    grid-row: 2;
+    text-align: center;
+  }
+}

@@ -31,7 +31,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="container">
-        <Link to="/" className="logo">POT & GERABAH</Link>
+        <Link to="/" className="logo">Earthen Collective</Link>
         <nav className="nav">
           <ul>
             <li><Link to="/">Home</Link></li>

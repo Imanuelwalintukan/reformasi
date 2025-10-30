@@ -1,0 +1,31 @@
+.hero {
+  background: linear-gradient(to right, rgba(255, 225, 175, 0.3), rgba(183, 116, 102, 0.1)), var(--color-background);
+  padding: 6rem 0;
+  text-align: center;
+}
+
+.hero .container {
+  max-width: 800px;
+}
+
+.hero h2 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  color: var(--color-text);
+  margin-bottom: 2.5rem;
+}
+
+.hero .cta-button {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: var(--shadow-md);
+}
