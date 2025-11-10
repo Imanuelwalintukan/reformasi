@@ -16,51 +16,74 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Cek apakah ada user saat aplikasi dimuat
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUser(user);
-        localStorage.setItem('user', JSON.stringify(user));
+    // Hanya cek user saat aplikasi dimuat, tanpa mengandalkan URL callback
+    const checkUser = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+
+        if (session?.user) {
+          setUser(session.user);
+        }
+      } catch (err) {
+        console.error('Error in auth check:', err);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    fetchUser();
+    checkUser();
 
-    // Setup auth listener untuk menangani perubahan auth state
+    // Setup listener untuk perubahan auth state
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         if (event === 'SIGNED_IN') {
-          setUser(session.user);
-          localStorage.setItem('user', JSON.stringify(session.user));
+          setUser(session?.user || null);
         } else if (event === 'SIGNED_OUT') {
           setUser(null);
-          localStorage.removeItem('user');
-          localStorage.removeItem('session');
+        } else if (event === 'TOKEN_REFRESHED' && session) {
+          setUser(session.user);
+        } else if (event === 'USER_UPDATED' && session) {
+          setUser(session.user);
         }
       }
     );
 
-    // Cleanup subscription saat komponen unmount
+    // Cleanup subscription
     return () => {
-      subscription.unsubscribe();
+      subscription?.unsubscribe();
     };
   }, []);
 
-  const login = (userData, sessionData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
-    if (sessionData) {
-      localStorage.setItem('session', JSON.stringify(sessionData));
+  const login = async (provider = 'google') => {
+    if (provider === 'google') {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      
+      if (error) {
+        console.error('Google login error:', error);
+        throw error;
+      }
     }
   };
 
   const logout = async () => {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Logout error:', error);
+    }
     setUser(null);
-    localStorage.removeItem('user');
-    localStorage.removeItem('session');
   };
 
   const value = {

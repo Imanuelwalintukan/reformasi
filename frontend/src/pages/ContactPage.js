@@ -12,23 +12,30 @@ const ContactPage = () => {
           </p>
           <div className="contact-details">
             <p><strong>Email:</strong> ebusinessebusinesskelompok24@gmail.com</p>
-            <p><strong>Studio Location:</strong> Minahasa, Indonesia (By Appointment)</p>
+            <p><strong>Studio Location:</strong> Minahasa, Sulawesi Utara, Indonesia (By Appointment)</p>
+            <p><strong>Working Hours:</strong> Monday-Friday 09:00-17:00 WIB</p>
+            <p><strong>WhatsApp:</strong> +62 812-3456-7890</p>
           </div>
           <div className="contact-socials">
-            <a href="#">Instagram</a>
-            <a href="#">Pinterest</a>
-            <a href="#">Facebook</a>
+            <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="#" target="_blank" rel="noopener noreferrer">Pinterest</a>
+            <a href="#" target="_blank" rel="noopener noreferrer">Facebook</a>
           </div>
         </div>
         <div className="contact-form-section">
+          <h2>Send us a Message</h2>
           <form className="contact-form">
             <div className="form-group">
               <label htmlFor="name">Full Name</label>
-              <input type="text" id="name" name="name" placeholder="Your Name" required />
+              <input type="text" id="name" name="name" placeholder="Enter your full name" required />
             </div>
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
-              <input type="email" id="email" name="email" placeholder="your.email@example.com" required />
+              <input type="email" id="email" name="email" placeholder="Enter your email address" required />
+            </div>
+            <div className="form-group">
+              <label htmlFor="subject">Subject</label>
+              <input type="text" id="subject" name="subject" placeholder="What is this regarding?" required />
             </div>
             <div className="form-group">
               <label htmlFor="message">Message</label>

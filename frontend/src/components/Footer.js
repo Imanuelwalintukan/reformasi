@@ -9,12 +9,12 @@ const Footer = () => {
           <div className="footer-brand">
             <h3>Earthen Collective</h3>
             <p>Handcrafted pottery for the modern soul.</p>
+            <p>Based in Minahasa, North Sulawesi, Indonesia.</p>
           </div>
           <div className="footer-links">
             <Link to="/about">About</Link>
+            <Link to="/faq">FAQ</Link>
             <Link to="/contact">Contact</Link>
-            {/* The href attribute requires a valid value to be accessible. */}
-            <a href="/faq">FAQ</a>
           </div>
           <div className="footer-socials">
             {/* The href attribute requires a valid value to be accessible. */}

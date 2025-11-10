@@ -1,58 +1,10 @@
-// Import only the utility functions
-const { createOrderRecord, updateOrderStatusRecord } = require('./orderUtils');
+const { createClient } = require('@supabase/supabase-js');
 
-// HTTP handler functions that use the utility functions
-const createOrder = async (req, res) => {
-  try {
-    const result = await createOrderRecord({
-      ...req.body,
-      user_id: req.user?.id || null
-    });
-    
-    if (result.success) {
-      res.status(201).json(result);
-    } else {
-      res.status(500).json({ error: 'Failed to create order' });
-    }
-  } catch (error) {
-    console.error('Error creating order:', error);
-    res.status(500).json({ error: error.message || 'Failed to create order' });
-  }
-};
-
-const updateOrderStatus = async (req, res) => {
-  try {
-    const { orderId } = req.params;
-    const statusData = req.body;
-    
-    const result = await updateOrderStatusRecord(orderId, statusData);
-    
-    if (result.success) {
-      res.status(200).json(result);
-    } else {
-      res.status(500).json({ error: 'Failed to update order status' });
-    }
-  } catch (error) {
-    console.error('Error updating order status:', error);
-    res.status(500).json({ error: error.message || 'Failed to update order status' });
-  }
-};
-
-const getOrderById = async (req, res) => {
-  try {
-    // Ini akan diimplementasikan nanti jika diperlukan untuk rute HTTP
-    res.status(501).json({ error: 'Not implemented' });
-  } catch (error) {
-    console.error('Error fetching order:', error);
-    res.status(500).json({ error: error.message || 'Failed to fetch order' });
-  }
-};
-
-module.exports = {
-  createOrder,
-  updateOrderStatus,
-  getOrderById
-};
+// Inisialisasi Supabase client
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
 
 const createOrder = async (req, res) => {
   try {

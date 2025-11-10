@@ -73,6 +73,29 @@ CREATE TABLE IF NOT EXISTS payment_config (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Tabel untuk ulasan produk
+CREATE TABLE IF NOT EXISTS product_reviews (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+  rating INTEGER CHECK (rating >= 1 AND rating <= 5) NOT NULL,
+  review_text TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, product_id) -- Mencegah pengguna memberi ulasan ganda untuk produk yang sama
+);
+
+-- Tabel untuk wishlist produk
+CREATE TABLE IF NOT EXISTS user_wishlist (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, product_id) -- Mencegah produk duplikat dalam wishlist
+);
+
+-- Tabel cart (keranjang belanja pengguna)
+
 -- Fungsi trigger untuk update timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -93,6 +116,14 @@ CREATE TRIGGER update_products_updated_at
 
 CREATE TRIGGER update_orders_updated_at 
     BEFORE UPDATE ON orders 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_product_reviews_updated_at 
+    BEFORE UPDATE ON product_reviews 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_user_wishlist_updated_at 
+    BEFORE UPDATE ON user_wishlist 
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Insert sample products

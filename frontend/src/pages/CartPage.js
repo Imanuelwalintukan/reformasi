@@ -124,13 +124,17 @@ const CartPage = () => {
     return (
       <div className="cart-page">
         <div className="container">
-          <h1>Checkout Success!</h1>
+          <h1 className="text-3xl font-bold text-center mb-8 text-earthen-primary font-heading">Checkout Success!</h1>
           <div className="checkout-success">
             <div className="success-icon">✓</div>
-            <h2>Thank You for Your Order!</h2>
-            <p>Your order has been placed successfully.</p>
-            <p>Order Total: {convertToRupiah(total)}</p>
-            <p>We will contact you shortly to confirm your order.</p>
+            <h2 className="text-2xl font-bold text-green-600 mb-4">Thank You for Your Order!</h2>
+            <p className="text-lg mb-2">Your order has been placed successfully.</p>
+            <p className="text-lg mb-4">Order Total: {convertToRupiah(total)}</p>
+            <p className="text-lg">We will contact you shortly to confirm your order.</p>
+            <div className="mt-6">
+              <a href="/" className="inline-block bg-earthen-primary text-white px-6 py-3 rounded-lg hover:bg-earthen-accent transition-colors duration-300 mr-4">Continue Shopping</a>
+              <a href="/profile" className="inline-block bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors duration-300">View Order History</a>
+            </div>
           </div>
         </div>
       </div>
@@ -141,7 +145,7 @@ const CartPage = () => {
     return (
       <div className="cart-page">
         <div className="container">
-          <h1>Checkout</h1>
+          <h1 className="text-3xl font-bold text-center mb-8 text-earthen-primary font-heading">Checkout</h1>
           <div className="checkout-container">
             <div className="checkout-form">
               <h2>Delivery Information</h2>
@@ -155,6 +159,7 @@ const CartPage = () => {
                     value={orderDetails.name}
                     onChange={handleInputChange}
                     required
+                    className="input-field"
                   />
                 </div>
                 
@@ -167,6 +172,7 @@ const CartPage = () => {
                     value={orderDetails.email}
                     onChange={handleInputChange}
                     required
+                    className="input-field"
                   />
                 </div>
                 
@@ -179,6 +185,7 @@ const CartPage = () => {
                     value={orderDetails.phone}
                     onChange={handleInputChange}
                     required
+                    className="input-field"
                   />
                 </div>
                 
@@ -191,6 +198,7 @@ const CartPage = () => {
                     onChange={handleInputChange}
                     required
                     rows="3"
+                    className="input-field"
                   ></textarea>
                 </div>
                 
@@ -202,6 +210,7 @@ const CartPage = () => {
                     value={orderDetails.paymentMethod}
                     onChange={handleInputChange}
                     required
+                    className="input-field"
                   >
                     <option value="cod">Cash on Delivery</option>
                     <option value="gopay">GoPay</option>
@@ -216,7 +225,7 @@ const CartPage = () => {
                 </div>
                 
                 <div className="order-summary">
-                  <h3>Order Summary</h3>
+                  <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
                   {cartItems.map(item => (
                     <div key={item.id} className="order-item">
                       <span>{item.name} x{item.quantity}</span>
@@ -250,6 +259,7 @@ const CartPage = () => {
         {showMidtransPayment && (
           <div className="payment-modal-overlay">
             <div className="payment-modal-content">
+              <h3 className="text-xl font-semibold mb-4 text-center">Payment Processing</h3>
               <MidtransPayment
                 totalAmount={total}
                 orderDetails={orderDetails}
@@ -267,11 +277,17 @@ const CartPage = () => {
   return (
     <div className="cart-page">
       <div className="container">
-        <h1>Shopping Cart</h1>
+        <h1 className="text-3xl font-bold text-center mb-8 text-earthen-primary font-heading">Your Shopping Cart</h1>
         <div className="cart-content">
           <div className="cart-items">
             {cartItems.length === 0 ? (
-              <p className="empty-cart">Your cart is currently empty</p>
+              <div className="empty-cart">
+                <h3>Your Cart is Empty</h3>
+                <p>Looks like you haven't added any items to your cart yet.</p>
+                <p className="mt-4">
+                  <a href="/products" className="inline-block bg-earthen-primary text-white px-6 py-3 rounded-lg hover:bg-earthen-accent transition-colors duration-300">Browse Products</a>
+                </p>
+              </div>
             ) : (
               cartItems.map((item) => (
                 <div key={item.id} className="cart-item">
@@ -283,12 +299,14 @@ const CartPage = () => {
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
                         disabled={item.quantity <= 1}
+                        className="quantity-btn"
                       >
                         -
                       </button>
                       <span>{item.quantity}</span>
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="quantity-btn"
                       >
                         +
                       </button>
@@ -321,6 +339,9 @@ const CartPage = () => {
             <button className="checkout-btn" onClick={handleCheckout}>
               Proceed to Checkout
             </button>
+            <div className="faq-link-section">
+              <p>Need help? <a href="/faq" className="text-earthen-primary hover:underline">Check our FAQ</a></p>
+            </div>
           </div>
         </div>
       </div>

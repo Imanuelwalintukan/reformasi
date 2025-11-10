@@ -1,0 +1,69 @@
+.wishlist-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 10;
+}
+
+.wishlist-btn.normal {
+  width: 44px;
+  height: 44px;
+}
+
+.wishlist-btn.small {
+  width: 36px;
+  height: 36px;
+}
+
+.wishlist-btn svg {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s ease;
+}
+
+.wishlist-btn:not(.in-wishlist) {
+  color: #999;
+}
+
+.wishlist-btn:not(.in-wishlist):hover {
+  color: #b77466;
+  background: rgba(248, 246, 243, 0.5);
+}
+
+.wishlist-btn.in-wishlist {
+  color: #e74c3c;
+  background: rgba(255, 240, 240, 0.3);
+}
+
+.wishlist-btn.in-wishlist:hover {
+  background: rgba(255, 220, 220, 0.5);
+  transform: scale(1.1);
+}
+
+.wishlist-btn.loading {
+  color: #957c62;
+}
+
+.wishlist-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(183, 116, 102, 0.5);
+}
+
+/* Animated heart effect */
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  5% { transform: scale(1.1); }
+  10% { transform: scale(1); }
+  15% { transform: scale(1.1); }
+  20% { transform: scale(1); }
+}
+
+.wishlist-btn.in-wishlist:active {
+  animation: heartBeat 0.4s ease;
+}
