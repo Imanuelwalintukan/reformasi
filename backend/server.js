@@ -22,12 +22,14 @@ const productsRouter = require('./routes/products');
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const midtransRouter = require('./routes/midtrans');
+const dummyAuthRouter = require('./routes/dummyAuth');
 
 // Use routes
 app.use('/api/products', productsRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/midtrans', midtransRouter);
+app.use('/api/dummy', dummyAuthRouter);
 
 app.listen(port, () => {
   console.log(`Server berjalan di port ${port}`);

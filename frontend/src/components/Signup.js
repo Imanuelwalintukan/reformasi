@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext'; // Tambahkan import useAuth
 import GoogleLoginButton from './GoogleLoginButton';
 import './Signup.css';
 
 const Signup = () => {
+  const { login } = useAuth(); // Gunakan fungsi login dari auth context
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -42,14 +44,15 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      // Kita akan menggunakan endpoint dummy login untuk registrasi juga
+      // karena untuk dummy login kita hanya perlu email dan full_name
+      const response = await fetch('http://localhost:5000/api/dummy/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: formData.email,
-          password: formData.password,
           full_name: formData.full_name
         }),
       });
@@ -70,14 +73,16 @@ const Signup = () => {
   };
 
   const handleGoogleSuccess = (data) => {
-    console.log('Google login successful:', data);
-    // Jika pengguna login dengan Google, kita bisa redirect ke halaman utama langsung
+    console.log('Dummy login successful:', data);
+    // Gunakan fungsi login dari auth context dengan data user dari response
+    login(data);
+    // Jika pengguna login dengan dummy account, redirect ke halaman utama
     navigate('/');
   };
 
   const handleGoogleError = (error) => {
-    setError('Login dengan Google gagal. Silakan coba lagi.');
-    console.error('Google login error:', error);
+    setError('Dummy login gagal. Silakan coba lagi.');
+    console.error('Dummy login error:', error);
   };
 
   return (

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useCart } from '../components/CartContext';
+import { convertToRupiah } from '../utils/currencyFormatter';
 import { getAIResponse } from '../utils/openaiService';
 import { extractUserPreferences, getAdvancedRecommendations, generateRecommendationDescription, getBusinessInfo } from '../utils/recommendationEngine';
 import products from '../products';
@@ -145,7 +146,7 @@ const AIPage = () => {
               <div key={product.id} className="bg-gray-800 rounded-lg border border-gray-700 p-4 shadow-lg flex flex-col text-left transition-transform transform hover:scale-105">
                 <div className="flex-1">
                   <h4 className="font-bold text-yellow-400 text-sm">{product.name}</h4>
-                  <p className="text-sm text-gray-300 font-semibold">Rp{(product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
+                  <p className="text-sm text-gray-300 font-semibold">{convertToRupiah(product.price)}</p>
                   <p className="text-xs text-gray-400 mt-2">{product.description}</p>
                 </div>
                 <button 

@@ -152,21 +152,24 @@ const getFallbackResponse = async (messages, relevantInfo) => {
   if (lowerInput.includes('semua produk') || lowerInput.includes('tampilkan semua') || lowerInput.includes('lihat semua') || lowerInput.includes('produk apa saja')) {
     responseText = `Berikut semua produk yang tersedia di Earthen Collective:\n\n`;
     products.forEach((product, index) => {
-      responseText += `${index + 1}. **${product.name}** - Rp${(product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n`;
+      const priceInRupiah = (product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      responseText += `${index + 1}. **${product.name}** - Rp${priceInRupiah}\n`;
       responseText += `   ${product.description}\n\n`;
     });
   }
   // Cek permintaan produk termahal
   else if (lowerInput.includes('termahal') || lowerInput.includes('paling mahal') || lowerInput.includes('harga tertinggi')) {
     responseText = `Produk termahal kami adalah:\n\n`;
-    responseText += `**${mostExpensive.name}** - Rp${(mostExpensive.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n`;
+    const priceInRupiah = (mostExpensive.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    responseText += `**${mostExpensive.name}** - Rp${priceInRupiah}\n`;
     responseText += `${mostExpensive.description}\n\n`;
     responseText += "Apakah Anda tertarik dengan produk ini?";
   }
   // Cek permintaan produk termurah
   else if (lowerInput.includes('termurah') || lowerInput.includes('paling murah') || lowerInput.includes('harga terendah')) {
     responseText = `Produk termurah kami adalah:\n\n`;
-    responseText += `**${cheapest.name}** - Rp${(cheapest.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n`;
+    const priceInRupiah = (cheapest.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    responseText += `**${cheapest.name}** - Rp${priceInRupiah}\n`;
     responseText += `${cheapest.description}\n\n`;
     responseText += "Apakah Anda tertarik dengan produk ini?";
   }
@@ -246,7 +249,8 @@ const getFallbackResponse = async (messages, relevantInfo) => {
     responseText = `Saya menemukan beberapa produk yang mungkin cocok untuk Anda:\n\n`;
     
     matchedProducts.slice(0, 3).forEach((product, index) => {
-      responseText += `${index + 1}. **${product.name}** - Rp${(product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n`;
+      const priceInRupiah = (product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      responseText += `${index + 1}. **${product.name}** - Rp${priceInRupiah}\n`;
       responseText += `   ${product.description}\n\n`;
     });
     

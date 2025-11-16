@@ -34,19 +34,15 @@ const WishlistButton = ({ product, size = 'normal' }) => {
       onClick={handleWishlistToggle}
       title={isInWishlistState ? 'Hapus dari Wishlist' : 'Tambah ke Wishlist'}
     >
-      <svg 
-        className="wishlist-icon" 
-        viewBox="0 0 24 24" 
-        fill={isInWishlistState ? "currentColor" : "none"} 
-        stroke="currentColor" 
-        strokeWidth="2"
+      <svg
+        className="wishlist-icon"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <path 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
-          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" 
-        />
+        <path d="M12 21.67l-6.11-6.04C3.3 13.06 1 10.2 1 7.5 1 4.42 3.42 2 6.5 2c1.78 0 3.46.84 4.5 2.21C12.04 2.84 13.72 2 15.5 2 18.58 2 21 4.42 21 7.5c0 2.7-2.3 5.56-4.89 8.13z" />
       </svg>
+      <span className="wishlist-text">Add to Wishlist</span>
     </button>
   );
 };

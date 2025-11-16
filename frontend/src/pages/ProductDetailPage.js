@@ -21,7 +21,7 @@ const ProductDetailPage = () => {
     // Temukan produk berdasarkan ID (konversi string ke integer untuk mencocokkan)
     const productId = parseInt(id);
     const foundProduct = products.find(p => p.id === productId);
-    
+
     if (foundProduct) {
       setProduct(foundProduct);
     } else {
@@ -35,10 +35,10 @@ const ProductDetailPage = () => {
       const storedReviews = localStorage.getItem('productReviews');
       if (storedReviews) {
         const allReviews = JSON.parse(storedReviews);
-        const productReviews = allReviews.filter(review => 
+        const productReviews = allReviews.filter(review =>
           review.productId === productId || review.productId === id
         );
-        
+
         if (productReviews.length > 0) {
           const totalRating = productReviews.reduce((sum, review) => sum + review.rating, 0);
           setAverageRating((totalRating / productReviews.length).toFixed(1));
@@ -94,8 +94,8 @@ const ProductDetailPage = () => {
             <div className="rating-info">
               <div className="rating-stars">
                 {[...Array(5)].map((_, i) => (
-                  <span 
-                    key={i} 
+                  <span
+                    key={i}
                     className={i < Math.floor(averageRating) ? 'star filled' : 'star empty'}
                   >
                     ★
@@ -105,25 +105,24 @@ const ProductDetailPage = () => {
               <span className="rating-value">({averageRating})</span>
               <span className="review-count">({totalReviews} ulasan)</span>
             </div>
-            <div className="price">{convertToRupiah(product.price * 8000)}</div>
+            <div className="price">{convertToRupiah(product.price)}</div>
             <p className="description">{product.description}</p>
             <div className="product-details">
               <p><strong>Kategori:</strong> {product.color || 'Pottery'}</p>
               <p><strong>Stok:</strong> Tersedia (Stok Banyak)</p>
             </div>
             <div className="product-actions">
-              <button 
-                className="add-to-cart-btn" 
+              <button
+                className="add-to-cart-btn"
                 onClick={handleAddToCart}
-                disabled={product.stock <= 0}
               >
-                {product.stock > 0 ? 'Tambah ke Keranjang' : 'Stok Habis'}
+                Tambahkan ke Keranjang
               </button>
               <WishlistButton product={product} size="normal" />
             </div>
           </div>
         </div>
-        
+
         <div className="reviews-section">
           <ProductReviews productId={id} />
         </div>

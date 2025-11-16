@@ -8,6 +8,16 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Tambahkan konfigurasi untuk mengelola sesi
+const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    // Refresh token secara otomatis sebelum kadaluarsa
+    autoRefreshToken: true,
+    // Simpan sesi di localStorage agar tetap login setelah refresh
+    persistSession: true,
+    // Durasi sesi dalam detik (jika tidak diatur, gunakan default)
+    detectSessionInUrl: true
+  }
+});
 
 export { supabase };

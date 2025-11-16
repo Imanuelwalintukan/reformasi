@@ -181,7 +181,8 @@ export const generateRecommendationDescription = (products, preferences) => {
       description += `Produk termurah kami adalah:\n\n`;
     }
     
-    description += `**${product.name}** - Rp${(product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}\n`;
+    const priceInRupiah = (product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    description += `**${product.name}** - Rp${priceInRupiah}\n`;
     description += `${product.description}\n\n`;
     description += "Apakah Anda tertarik dengan produk ini?";
     return description;
@@ -191,7 +192,8 @@ export const generateRecommendationDescription = (products, preferences) => {
   if (preferences.allProducts) {
     description += "Berikut adalah semua produk yang tersedia di Earthen Collective:\n\n";
     products.forEach((product, index) => {
-      description += `${index + 1}. **${product.name}** - Rp${(product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}\n`;
+      const priceInRupiah = (product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      description += `${index + 1}. **${product.name}** - Rp${priceInRupiah}\n`;
       description += `   ${product.description}\n\n`;
     });
     return description;
@@ -200,11 +202,15 @@ export const generateRecommendationDescription = (products, preferences) => {
   // Deskripsi berdasarkan kriteria harga
   if (preferences.maxPrice !== undefined || preferences.minPrice !== undefined) {
     if (preferences.maxPrice !== undefined && preferences.minPrice !== undefined) {
-      description += `Berikut produk dengan harga antara Rp${(preferences.minPrice * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")} dan Rp${(preferences.maxPrice * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}:\n\n`;
+      const minPriceFormatted = (preferences.minPrice * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      const maxPriceFormatted = (preferences.maxPrice * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      description += `Berikut produk dengan harga antara Rp${minPriceFormatted} dan Rp${maxPriceFormatted}:\n\n`;
     } else if (preferences.maxPrice !== undefined) {
-      description += `Berikut produk dengan harga maksimal Rp${(preferences.maxPrice * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}:\n\n`;
+      const maxPriceFormatted = (preferences.maxPrice * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      description += `Berikut produk dengan harga maksimal Rp${maxPriceFormatted}:\n\n`;
     } else if (preferences.minPrice !== undefined) {
-      description += `Berikut produk dengan harga minimal Rp${(preferences.minPrice * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}:\n\n`;
+      const minPriceFormatted = (preferences.minPrice * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      description += `Berikut produk dengan harga minimal Rp${minPriceFormatted}:\n\n`;
     }
   } 
   // Deskripsi berdasarkan tujuan penggunaan
@@ -234,7 +240,8 @@ export const generateRecommendationDescription = (products, preferences) => {
   const displayLimit = Math.min(products.length, 5);
   
   products.slice(0, displayLimit).forEach((product, index) => {
-    description += `${index + 1}. **${product.name}** - Rp${(product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}\n`;
+    const priceInRupiah = (product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    description += `${index + 1}. **${product.name}** - Rp${priceInRupiah}\n`;
     description += `   ${product.description}\n\n`;
   });
   
@@ -283,18 +290,21 @@ export const getBusinessInfo = (query) => {
   // Menangani pertanyaan tentang produk termahal atau termurah
   if (lowerQuery.includes('termahal') || lowerQuery.includes('paling mahal')) {
     const mostExpensiveProduct = products.reduce((max, p) => p.price > max.price ? p : max, products[0]);
-    return `Produk termahal kami adalah ${mostExpensiveProduct.name} dengan harga Rp${(mostExpensiveProduct.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}. Ini adalah sebuah karya seni yang istimewa.`
+    const priceInRupiah = (mostExpensiveProduct.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return `Produk termahal kami adalah ${mostExpensiveProduct.name} dengan harga Rp${priceInRupiah}. Ini adalah sebuah karya seni yang istimewa.`
   }
 
   if (lowerQuery.includes('termurah') || lowerQuery.includes('paling murah')) {
     const cheapestProduct = products.reduce((min, p) => p.price < min.price ? p : min, products[0]);
-    return `Produk termurah kami adalah ${cheapestProduct.name} dengan harga Rp${(cheapestProduct.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}. Pilihan yang sangat terjangkau untuk memulai koleksi Anda.`
+    const priceInRupiah = (cheapestProduct.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return `Produk termurah kami adalah ${cheapestProduct.name} dengan harga Rp${priceInRupiah}. Pilihan yang sangat terjangkau untuk memulai koleksi Anda.`
   }
 
   if (lowerQuery.includes('semua produk') || lowerQuery.includes('produk kami')) {
     let productList = 'Tentu, berikut adalah semua produk yang kami tawarkan:\n\n';
     products.forEach(p => {
-      productList += `* ${p.name} - Rp${(p.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}\n`;
+      const priceInRupiah = (p.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      productList += `* ${p.name} - Rp${priceInRupiah}\n`;
     });
     return productList;
   }

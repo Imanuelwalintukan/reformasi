@@ -40,13 +40,6 @@
   transform: scale(1.05);
 }
 
-.wishlist-overlay {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 5;
-}
-
 .rating-info {
   display: flex;
   align-items: center;
@@ -109,16 +102,157 @@
   color: #777;
   line-height: 1.5;
   flex-grow: 1;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .add-to-cart {
-  width: 100%;
-  margin-top: auto;
   background-color: var(--color-accent);
   font-weight: 700;
 }
 
 .add-to-cart:hover {
   background-color: var(--color-primary);
+}
+
+.product-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.product-card-actions .add-to-cart {
+  flex: 1;
+  margin: 0;
+}
+
+.product-card-actions .wishlist-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  color: #e74c3c; /* Warna merah tetap untuk tombol love */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3); /* Bayangan lebih kuat */
+}
+
+.product-card-actions .wishlist-btn:not(.in-wishlist):hover {
+  color: #b77466;
+  background: rgba(248, 246, 243, 0.5);
+}
+
+.product-card-actions .wishlist-btn.in-wishlist {
+  color: #e74c3c;
+  background: rgba(255, 240, 240, 0.3);
+}
+
+.product-card-actions .wishlist-btn.in-wishlist:hover {
+  background: rgba(255, 220, 220, 0.5);
+  transform: scale(1.1);
+}
+
+/* Media queries untuk responsif */
+@media (max-width: 768px) {
+  .product-card-link {
+    margin-bottom: 1.5rem;
+  }
+
+  .product-image-container {
+    height: 200px; /* Kurangi tinggi di mobile */
+  }
+
+  .product-info {
+    padding: 1rem; /* Kurangi padding untuk hemat ruang */
+  }
+
+  .product-info h3 {
+    font-size: 1.1rem; /* Sesuaikan ukuran font */
+  }
+
+  .product-info .price {
+    font-size: 1rem;
+  }
+
+  .product-info .description {
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .product-card-actions {
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+
+  .product-card-actions .add-to-cart {
+    padding: 8px 12px; /* Kurangi padding tombol */
+    font-size: 0.9rem;
+  }
+
+  .product-card-actions .wishlist-btn {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .product-card {
+    margin-bottom: 1.2rem;
+  }
+
+  .product-image-container {
+    height: 180px;
+  }
+
+  .product-info h3 {
+    font-size: 1rem;
+  }
+
+  .rating-info {
+    font-size: 0.8rem;
+  }
+
+  .product-card-actions .add-to-cart {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card-link {
+    margin-bottom: 1rem;
+  }
+
+  .product-image-container {
+    height: 160px;
+  }
+
+  .product-info {
+    padding: 0.8rem;
+  }
+
+  .product-info h3 {
+    font-size: 0.95rem;
+  }
+
+  .product-info .price {
+    font-size: 0.95rem;
+  }
+
+  .product-info .description {
+    font-size: 0.8rem;
+  }
+
+  .product-card-actions {
+    flex-direction: column; /* Ubah ke tumpuk vertikal di layar sangat kecil */
+    gap: 0.4rem;
+  }
+
+  .product-card-actions .add-to-cart,
+  .product-card-actions .wishlist-btn {
+    margin: 0;
+    align-self: stretch;
+  }
 }

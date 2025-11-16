@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useCart } from './CartContext';
+import { convertToRupiah } from '../utils/currencyFormatter';
 import { getAIResponse } from '../utils/openaiService';
 import { extractUserPreferences, getAdvancedRecommendations, generateRecommendationDescription, getBusinessInfo } from '../utils/recommendationEngine';
 import products from '../products';
@@ -164,7 +165,7 @@ const AIChatbot = () => {
               <div key={product.id} className="bg-white rounded-xl border border-gray-200 p-3 shadow-sm flex items-center">
                 <div className="flex-1">
                   <h4 className="font-bold text-earthen-primary text-xs">{product.name}</h4>
-                  <p className="text-xs text-earthen-accent font-bold">Rp{(product.price * 15000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
+                  <p className="text-xs text-earthen-accent font-bold">{convertToRupiah(product.price)}</p>
                   <p className="text-xs text-gray-600 mt-1">{product.description.substring(0, 60)}...</p>
                 </div>
                 <button 

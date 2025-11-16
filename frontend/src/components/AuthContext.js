@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../config/supabaseClient';
 
 const AuthContext = createContext();
 
@@ -15,76 +14,36 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Hanya cek user saat aplikasi dimuat, tanpa mengandalkan URL callback
-    const checkUser = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          console.error('Error getting session:', error);
-          setUser(null);
-          setLoading(false);
-          return;
-        }
-
-        if (session?.user) {
-          setUser(session.user);
-        }
-      } catch (err) {
-        console.error('Error in auth check:', err);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkUser();
-
-    // Setup listener untuk perubahan auth state
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === 'SIGNED_IN') {
-          setUser(session?.user || null);
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
-        } else if (event === 'TOKEN_REFRESHED' && session) {
-          setUser(session.user);
-        } else if (event === 'USER_UPDATED' && session) {
-          setUser(session.user);
-        }
-      }
-    );
-
-    // Cleanup subscription
-    return () => {
-      subscription?.unsubscribe();
-    };
-  }, []);
-
-  const login = async (provider = 'google') => {
-    if (provider === 'google') {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: window.location.origin
-        }
-      });
-      
-      if (error) {
-        console.error('Google login error:', error);
-        throw error;
-      }
+  // Fungsi login dummy
+  const login = async (userData) => {
+    if (userData && userData.user) {
+      // Simpan user data dari response dummy login
+      setUser(userData.user);
+      // Simpan user data ke localStorage agar tetap login setelah refresh
+      localStorage.setItem('dummy_user', JSON.stringify(userData.user));
     }
   };
 
+  // Fungsi logout
   const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Logout error:', error);
-    }
+    // Hapus user dari localStorage
+    localStorage.removeItem('dummy_user');
     setUser(null);
   };
+
+  // Cek apakah ada user dummy di localStorage saat halaman dimuat
+  useEffect(() => {
+    const dummyUser = localStorage.getItem('dummy_user');
+    if (dummyUser) {
+      try {
+        const parsedUser = JSON.parse(dummyUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error('Error parsing dummy user from localStorage:', error);
+      }
+    }
+    setLoading(false);
+  }, []);
 
   const value = {
     user,

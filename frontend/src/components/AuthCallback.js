@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
+// Komponen AuthCallback sekarang digunakan untuk redirect umum
+// karena login dummy tidak memerlukan callback khusus dari service provider
 const AuthCallback = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -19,7 +21,7 @@ const AuthCallback = () => {
 
   return (
     <div className="auth-callback">
-      <p>Memproses autentikasi...</p>
+      <p>Memproses login...</p>
     </div>
   );
 };

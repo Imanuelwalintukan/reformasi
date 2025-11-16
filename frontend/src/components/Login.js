@@ -7,11 +7,12 @@ import './Login.css';
 const Login = () => {
   const [credentials, setCredentials] = useState({
     email: '',
-    password: ''
+    full_name: '',  // Tambahkan full_name untuk dummy login
+    password: ''    // Tetap simpan untuk kompatibilitas tampilan
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -28,22 +29,27 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      // Kita akan menggunakan endpoint dummy login 
+      // Kirim email dan full_name ke endpoint dummy
+      const response = await fetch('http://localhost:5000/api/dummy/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(credentials),
+        body: JSON.stringify({
+          email: credentials.email,
+          full_name: credentials.full_name || credentials.email.split('@')[0]  // Gunakan nama dari email jika full_name kosong
+        }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Login gagal. Periksa kembali email dan password Anda.');
+        throw new Error(data.error || 'Login gagal. Periksa kembali email dan nama Anda.');
       }
 
-      // Gunakan fungsi login dari context
-      login(data.user, data.session);
+      // Gunakan fungsi login dari context dengan data user dari response
+      login(data);
 
       // Arahkan ke halaman utama
       navigate('/');
@@ -55,12 +61,14 @@ const Login = () => {
   };
 
   const handleGoogleSuccess = (data) => {
-    console.log('Google login successful:', data);
+    console.log('Dummy login successful:', data);
+    // Gunakan fungsi login dari context dengan data user dari response
+    login(data);
   };
 
   const handleGoogleError = (error) => {
-    setError('Login dengan Google gagal. Silakan coba lagi.');
-    console.error('Google login error:', error);
+    setError('Dummy login gagal. Silakan coba lagi.');
+    console.error('Dummy login error:', error);
   };
 
   return (
@@ -70,9 +78,9 @@ const Login = () => {
           <h2>Selamat Datang Kembali</h2>
           <p>Masuk ke akun Anda untuk melanjutkan</p>
         </div>
-        
+
         {error && <div className="error-message">{error}</div>}
-        
+
         <form onSubmit={handleSubmit} className="login-form">
           <div className="input-group">
             <label htmlFor="email">Email</label>
@@ -85,30 +93,30 @@ const Login = () => {
               required
             />
           </div>
-          
+
           <div className="input-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="full_name">Nama Lengkap</label>
             <input
-              type="password"
-              id="password"
-              name="password"
-              value={credentials.password}
+              type="text"
+              id="full_name"
+              name="full_name"
+              value={credentials.full_name}
               onChange={handleChange}
-              required
+              placeholder="Nama akan diambil dari email jika kosong"
             />
           </div>
-          
+
           <button type="submit" className="login-btn" disabled={isLoading}>
             {isLoading ? 'Memproses...' : 'Masuk'}
           </button>
         </form>
-        
+
         <div className="divider">
           <span>atau</span>
         </div>
-        
+
         <GoogleLoginButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
-        
+
         <div className="login-footer">
           <p>Belum punya akun? <a href="/signup">Daftar di sini</a></p>
         </div>
