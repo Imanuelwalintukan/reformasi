@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './GoogleLoginButton.css'; // Gunakan style yang sama agar tetap konsisten
+import './GoogleLoginButton.css';
 
 const GoogleLoginButton = ({ onSuccess, onError }) => {
   const navigate = useNavigate();
@@ -9,20 +9,18 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
   const handleDummyLogin = async () => {
     try {
       setIsLoading(true);
-      
-      // Data dummy yang akan dikirim ke backend
+
       const dummyCredentials = {
-        email: 'dummy@example.com', // Email default untuk login dummy
-        full_name: 'Dummy User'      // Nama default untuk login dummy
+        email: 'dummy@example.com',
+        full_name: 'Dummy User'
       };
-      
-      // Panggil API dummy login - gunakan relative path agar bekerja di produksi
+
       const response = await fetch('/api/dummy/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(dummyCredentials),
+        body: JSON.stringify(dummyCredentials)
       });
 
       const data = await response.json();
@@ -31,17 +29,14 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
         throw new Error(data.error || 'Dummy login failed');
       }
 
-      // Panggil fungsi onSuccess dengan data user
       if (onSuccess) {
         onSuccess(data);
       }
-      
-      // Arahkan ke halaman utama setelah login sukses
+
       navigate('/');
     } catch (error) {
       console.error('Dummy login error:', error);
-      
-      // Panggil fungsi onError jika disediakan
+
       if (onError) {
         onError(error);
       }
