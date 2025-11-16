@@ -9,23 +9,26 @@ global.fetch = require('node-fetch');
 // Fungsi untuk menguji login dummy
 async function testDummyLogin() {
   console.log('Test 1: Mencoba dummy login dengan fetch ke backend');
-  
+
   try {
     const dummyCredentials = {
       email: 'test@example.com',
       full_name: 'Test User'
     };
-    
+
+    // Ambil backend URL dari environment atau gunakan default
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:5001';
+
     // Kita akan menguji dengan fetch ke endpoint dummy login
     // Perlu mengetes apakah backend sedang berjalan di port 5001
-    const response = await fetch('http://localhost:5001/api/dummy/login', {
+    const response = await fetch(`${backendUrl}/api/dummy/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(dummyCredentials),
     });
-    
+
     if(response.ok) {
       const data = await response.json();
       console.log('✓ Dummy login berhasil');
@@ -39,7 +42,7 @@ async function testDummyLogin() {
     }
   } catch (error) {
     console.log('✗ Error saat mencoba dummy login:', error.message);
-    console.log('Pastikan backend sedang berjalan di port 5001');
+    console.log('Pastikan backend sedang berjalan di port default (5001)');
     return null;
   }
 }
@@ -47,13 +50,13 @@ async function testDummyLogin() {
 // Fungsi untuk menguji login dummy ke port 5000 (fallback)
 async function testDummyLoginFallback() {
   console.log('\nTest 2: Mencoba dummy login dengan fallback ke port 5000');
-  
+
   try {
     const dummyCredentials = {
       email: 'test@example.com',
       full_name: 'Test User'
     };
-    
+
     const response = await fetch('http://localhost:5000/api/dummy/login', {
       method: 'POST',
       headers: {
@@ -61,7 +64,7 @@ async function testDummyLoginFallback() {
       },
       body: JSON.stringify(dummyCredentials),
     });
-    
+
     if(response.ok) {
       const data = await response.json();
       console.log('✓ Dummy login fallback berhasil');
@@ -83,15 +86,15 @@ async function testDummyLoginFallback() {
 // Jalankan test
 async function runTests() {
   console.log('Memulai testing login dummy frontend...\n');
-  
+
   // Coba port 5001 dulu
   let result = await testDummyLogin();
-  
+
   // Jika gagal, coba port 5000
   if (!result) {
     result = await testDummyLoginFallback();
   }
-  
+
   if (result) {
     console.log('\n✓ Semua test berhasil! Login dummy frontend siap digunakan.');
     console.log('Catatan: Pastikan backend sedang berjalan sebelum menggunakan fitur login.');

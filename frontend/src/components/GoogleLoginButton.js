@@ -16,8 +16,8 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
         full_name: 'Dummy User'      // Nama default untuk login dummy
       };
       
-      // Panggil API dummy login - perhatikan bahwa sekarang kita menggunakan port 5001 dan endpoint dummy
-      const response = await fetch('http://localhost:5001/api/dummy/login', {
+      // Panggil API dummy login - gunakan relative path agar bekerja di produksi
+      const response = await fetch('/api/dummy/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

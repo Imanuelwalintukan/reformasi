@@ -46,7 +46,7 @@ const Signup = () => {
     try {
       // Kita akan menggunakan endpoint dummy login untuk registrasi juga
       // karena untuk dummy login kita hanya perlu email dan full_name
-      const response = await fetch('http://localhost:5000/api/dummy/login', {
+      const response = await fetch('/api/dummy/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -29,9 +29,9 @@ const Login = () => {
     setError('');
 
     try {
-      // Kita akan menggunakan endpoint dummy login 
+      // Kita akan menggunakan endpoint dummy login
       // Kirim email dan full_name ke endpoint dummy
-      const response = await fetch('http://localhost:5000/api/dummy/login', {
+      const response = await fetch('/api/dummy/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
