@@ -15,14 +15,14 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
         full_name: 'Dummy User'
       };
 
-      const response = await fetch('https://reformasi.my.id/api/dummy/login', {
+      const response = await fetch('/api/dummy/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(dummyCredentials)
       });
-
+ 
       const data = await response.json();
 
       if (!response.ok) {
