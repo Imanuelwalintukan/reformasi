@@ -18,7 +18,7 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
       const response = await fetch('/api/dummy/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(dummyCredentials)
       });
@@ -29,17 +29,13 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
         throw new Error(data.error || 'Dummy login failed');
       }
 
-      if (onSuccess) {
-        onSuccess(data);
-      }
+      if (onSuccess) onSuccess(data);
 
       navigate('/');
     } catch (error) {
       console.error('Dummy login error:', error);
 
-      if (onError) {
-        onError(error);
-      }
+      if (onError) onError(error);
     } finally {
       setIsLoading(false);
     }
