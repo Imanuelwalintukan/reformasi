@@ -6,8 +6,13 @@ const app = express();
 const port = process.env.PORT || 5001;
 
 // Middleware
+const isProduction = process.env.NODE_ENV === 'production';
+const corsOrigin = isProduction
+  ? ['https://reformasi.my.id']
+  : ['http://localhost:3000', 'http://localhost:3001'];
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'], // Tambahkan port jika frontend berjalan di port lain
+  origin: corsOrigin,
   credentials: true
 }));
 app.use(express.json());
@@ -29,7 +34,15 @@ app.use('/api/products', productsRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/midtrans', midtransRouter);
-app.use('/api/dummy', dummyAuthRouter);
+
+// Conditional dummy auth routes based on environment variable
+const enableDummyAuth = process.env.ENABLE_DUMMY_AUTH === 'true';
+if (enableDummyAuth) {
+  app.use('/api/dummy', dummyAuthRouter);
+  console.log('Dummy authentication routes enabled');
+} else {
+  console.log('Dummy authentication routes disabled (set ENABLE_DUMMY_AUTH=true to enable)');
+}
 
 app.listen(port, () => {
   console.log(`Server berjalan di port ${port}`);
