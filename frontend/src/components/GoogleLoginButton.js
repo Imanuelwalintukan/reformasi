@@ -1,44 +1,32 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 import './GoogleLoginButton.css';
 
-const GoogleLoginButton = ({ onSuccess, onError }) => {
+const GoogleLoginButton = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleDummyLogin = async () => {
-    try {
-      setIsLoading(true);
+  const handleDummyLogin = () => {
+    setIsLoading(true);
 
-      const dummyCredentials = {
-        email: 'dummy@example.com',
-        full_name: 'Dummy User'
-      };
+    // Simulate a dummy Google login
+    const dummyUser = {
+      id: 'dummy-google-user',
+      email: 'dummy.google@example.com',
+      user_metadata: {
+        full_name: 'Dummy Google User',
+      },
+    };
 
-      const response = await fetch('/api/dummy/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dummyCredentials),
-      });
- 
-      const data = await response.json();
+    // Call the login function from the context
+    login(dummyUser);
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Dummy login failed');
-      }
+    // Redirect to home
+    navigate('/');
 
-      if (onSuccess) onSuccess(data);
-
-      navigate('/');
-    } catch (error) {
-      console.error('Dummy login error:', error);
-
-      if (onError) onError(error);
-    } finally {
-      setIsLoading(false);
-    }
+    setIsLoading(false);
   };
 
   return (

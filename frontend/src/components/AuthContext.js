@@ -15,18 +15,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // Fungsi login dummy
-  const login = async (userData) => {
-    if (userData && userData.user) {
-      // Simpan user data dari response dummy login
-      setUser(userData.user);
-      // Simpan user data ke localStorage agar tetap login setelah refresh
-      localStorage.setItem('dummy_user', JSON.stringify(userData.user));
+  const login = (userData) => {
+    if (userData) {
+      setUser(userData);
+      localStorage.setItem('dummy_user', JSON.stringify(userData));
     }
   };
 
   // Fungsi logout
-  const logout = async () => {
-    // Hapus user dari localStorage
+  const logout = () => {
     localStorage.removeItem('dummy_user');
     setUser(null);
   };

@@ -4,6 +4,9 @@ const { createClient } = require('@supabase/supabase-js');
 const getAllProducts = async (req, res) => {
   try {
     // Buat instance supabase client di dalam fungsi
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+      throw new Error('Missing Supabase environment variables for anon key');
+    }
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_ANON_KEY
@@ -30,6 +33,9 @@ const getProductById = async (req, res) => {
     const { id } = req.params;
     
     // Buat instance supabase client di dalam fungsi
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+      throw new Error('Missing Supabase environment variables for anon key');
+    }
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_ANON_KEY
@@ -59,6 +65,9 @@ const createProduct = async (req, res) => {
     const productData = req.body;
     
     // Buat instance supabase client di dalam fungsi
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error('Missing Supabase environment variables for service role');
+    }
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -91,6 +100,9 @@ const updateProduct = async (req, res) => {
     const productData = req.body;
     
     // Buat instance supabase client di dalam fungsi
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error('Missing Supabase environment variables for service role');
+    }
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -124,6 +136,9 @@ const deleteProduct = async (req, res) => {
     const { id } = req.params;
     
     // Buat instance supabase client di dalam fungsi
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error('Missing Supabase environment variables for service role');
+    }
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY

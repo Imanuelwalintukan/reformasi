@@ -1,9 +1,12 @@
 const { createClient } = require('@supabase/supabase-js');
 
 // Inisialisasi Supabase client
+if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  throw new Error('Missing Supabase environment variables for service role');
+}
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 const createOrder = async (req, res) => {

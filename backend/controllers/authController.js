@@ -10,20 +10,25 @@ const register = async (req, res) => {
       return res.status(400).json({ error: 'Email, password, dan full_name wajib diisi' });
     }
 
-    // Buat instance supabase client di dalam fungsi
+    // Pastikan service role key tersedia
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('SUPABASE_SERVICE_ROLE_KEY is not defined');
+      return res.status(500).json({ error: 'Internal server error: Service role key is not configured' });
+    }
+
+    // Buat instance supabase client dengan service role key
     const supabase = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+      process.env.SUPABASE_SERVICE_ROLE_KEY
     );
 
-    // Register user menggunakan Supabase Auth
-    const { data, error } = await supabase.auth.signUp({
+    // Register user using Supabase Admin Auth to bypass email confirmation
+    const { data, error } = await supabase.auth.admin.createUser({
       email,
       password,
-      options: {
-        data: {
-          full_name
-        }
+      email_confirm: true, // Directly confirm the email
+      user_metadata: {
+        full_name
       }
     });
 
@@ -54,10 +59,10 @@ const login = async (req, res) => {
       return res.status(400).json({ error: 'Email dan password wajib diisi' });
     }
 
-    // Buat instance supabase client di dalam fungsi
+    // Buat instance supabase client dengan anon key
     const supabase = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+      process.env.SUPABASE_ANON_KEY
     );
 
     // Login user menggunakan Supabase Auth
@@ -85,10 +90,10 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    // Buat instance supabase client di dalam fungsi
+    // Buat instance supabase client dengan anon key
     const supabase = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+      process.env.SUPABASE_ANON_KEY
     );
 
     const { error } = await supabase.auth.signOut();
@@ -107,10 +112,10 @@ const logout = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    // Buat instance supabase client di dalam fungsi
+    // Buat instance supabase client dengan anon key
     const supabase = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+      process.env.SUPABASE_ANON_KEY
     );
 
     const { data: { user }, error } = await supabase.auth.getUser();
