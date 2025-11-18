@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import GoogleLoginButton from './GoogleLoginButton';
 import './Signup.css';
 
 const Signup = () => {
@@ -11,9 +10,8 @@ const Signup = () => {
     confirm_password: ''
   });
   const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -27,7 +25,6 @@ const Signup = () => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    setMessage('');
 
     // Validasi password
     if (formData.password !== formData.confirm_password) {
@@ -36,28 +33,53 @@ const Signup = () => {
       return;
     }
 
-    // Dummy signup logic
-    console.log('Dummy signup successful for:', formData.email);
-    setMessage('Registrasi dummy berhasil! Silakan kembali ke halaman login.');
-    
-    setTimeout(() => {
-      navigate('/login');
-    }, 2000); // Redirect to login after 2 seconds
+    // Validasi panjang password
+    if (formData.password.length < 6) {
+      setError('Password minimal 6 karakter');
+      setIsLoading(false);
+      return;
+    }
 
-    setIsLoading(false);
+    try {
+      // Gunakan endpoint register baru yang hanya membutuhkan email dan full_name,
+      // namun tetap kirim password untuk kompatibilitas frontend
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          full_name: formData.full_name,
+          password: formData.password
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registrasi gagal. Silakan coba lagi.');
+      }
+
+      // Arahkan ke halaman login setelah registrasi berhasil
+      navigate('/login');
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="signup-container">
       <div className="signup-card">
         <div className="signup-header">
-          <h2>Buat Akun Baru (Dummy)</h2>
+          <h2>Buat Akun Baru</h2>
           <p>Bergabunglah dengan kami dan nikmati pengalaman berbelanja yang menyenangkan</p>
         </div>
-        
+
         {error && <div className="error-message">{error}</div>}
-        {message && <div className="success-message">{message}</div>}
-        
+
         <form onSubmit={handleSubmit} className="signup-form">
           <div className="input-group">
             <label htmlFor="full_name">Nama Lengkap</label>
@@ -70,7 +92,7 @@ const Signup = () => {
               required
             />
           </div>
-          
+
           <div className="input-group">
             <label htmlFor="email">Email</label>
             <input
@@ -82,7 +104,7 @@ const Signup = () => {
               required
             />
           </div>
-          
+
           <div className="input-group">
             <label htmlFor="password">Password</label>
             <input
@@ -94,7 +116,7 @@ const Signup = () => {
               required
             />
           </div>
-          
+
           <div className="input-group">
             <label htmlFor="confirm_password">Konfirmasi Password</label>
             <input
@@ -106,18 +128,12 @@ const Signup = () => {
               required
             />
           </div>
-          
+
           <button type="submit" className="signup-btn" disabled={isLoading}>
-            {isLoading ? 'Memproses...' : 'Daftar (Dummy)'}
+            {isLoading ? 'Memproses...' : 'Daftar'}
           </button>
         </form>
-        
-        <div className="divider">
-          <span>atau daftar dengan</span>
-        </div>
-        
-        <GoogleLoginButton />
-        
+
         <div className="signup-footer">
           <p>Sudah punya akun? <a href="/login">Masuk di sini</a></p>
         </div>

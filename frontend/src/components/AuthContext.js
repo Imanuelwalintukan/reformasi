@@ -14,29 +14,62 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fungsi login dummy
-  const login = (userData) => {
-    if (userData) {
+  // Fungsi login dengan session token
+  const login = (loginResponse) => {
+    if (loginResponse) {
+      // Simpan user data dan session token
+      const userData = {
+        ...loginResponse.user,
+        session_token: loginResponse.session_token
+      };
+
       setUser(userData);
-      localStorage.setItem('dummy_user', JSON.stringify(userData));
+      localStorage.setItem('auth_user', JSON.stringify(userData));
+      localStorage.setItem('session_token', loginResponse.session_token);
     }
   };
 
   // Fungsi logout
-  const logout = () => {
-    localStorage.removeItem('dummy_user');
-    setUser(null);
+  const logout = async () => {
+    try {
+      // Hapus token dari localStorage
+      const token = localStorage.getItem('session_token');
+
+      if (token) {
+        // Kirim request logout ke server (opsional)
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }).catch(() => {
+          // Jika logout gagal, lanjutkan proses logout client-side
+          console.log('Logout request failed, continuing with local logout');
+        });
+      }
+    } catch (error) {
+      console.error('Error during logout request:', error);
+    } finally {
+      // Hapus data dari localStorage
+      localStorage.removeItem('auth_user');
+      localStorage.removeItem('session_token');
+
+      setUser(null);
+    }
   };
 
-  // Cek apakah ada user dummy di localStorage saat halaman dimuat
+  // Cek apakah ada user di localStorage saat halaman dimuat
   useEffect(() => {
-    const dummyUser = localStorage.getItem('dummy_user');
-    if (dummyUser) {
+    const authUser = localStorage.getItem('auth_user');
+    const token = localStorage.getItem('session_token');
+
+    if (authUser && token) {
       try {
-        const parsedUser = JSON.parse(dummyUser);
+        const parsedUser = JSON.parse(authUser);
         setUser(parsedUser);
       } catch (error) {
-        console.error('Error parsing dummy user from localStorage:', error);
+        console.error('Error parsing user data from localStorage:', error);
       }
     }
     setLoading(false);

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import GoogleLoginButton from './GoogleLoginButton';
 import './Login.css';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
     email: '',
-    full_name: '',
+    password: ''
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -28,25 +27,28 @@ const Login = () => {
     setError('');
 
     try {
-      // Dummy login logic
-      if (!credentials.email) {
-        throw new Error('Email tidak boleh kosong');
+      // Gunakan endpoint login baru yang hanya membutuhkan email, namun tetap bisa menerima password jika diperlukan
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: credentials.email
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Login gagal. Periksa kembali email Anda.');
       }
 
-      const dummyUser = {
-        id: new Date().getTime(),
-        email: credentials.email,
-        user_metadata: {
-          full_name: credentials.full_name || credentials.email.split('@')[0],
-        },
-      };
-
-      // Panggil fungsi login dari context
-      login(dummyUser);
+      // Gunakan fungsi login dari context dengan data user dari response
+      login(data);
 
       // Arahkan ke halaman utama
       navigate('/');
-
     } catch (error) {
       setError(error.message);
     } finally {
@@ -58,7 +60,7 @@ const Login = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <h2>Selamat Datang Kembali (Dummy)</h2>
+          <h2>Selamat Datang Kembali</h2>
           <p>Masuk ke akun Anda untuk melanjutkan</p>
         </div>
 
@@ -73,32 +75,28 @@ const Login = () => {
               name="email"
               value={credentials.email}
               onChange={handleChange}
+              placeholder="masukkan email Anda"
               required
             />
           </div>
 
           <div className="input-group">
-            <label htmlFor="full_name">Nama Lengkap (Opsional)</label>
+            <label htmlFor="password">Password</label>
             <input
-              type="text"
-              id="full_name"
-              name="full_name"
-              value={credentials.full_name}
+              type="password"
+              id="password"
+              name="password"
+              value={credentials.password}
               onChange={handleChange}
-              placeholder="Nama akan diambil dari email jika kosong"
+              placeholder="masukkan password Anda"
+              required
             />
           </div>
 
           <button type="submit" className="login-btn" disabled={isLoading}>
-            {isLoading ? 'Memproses...' : 'Masuk (Dummy)'}
+            {isLoading ? 'Memproses...' : 'Masuk'}
           </button>
         </form>
-
-        <div className="divider">
-          <span>atau</span>
-        </div>
-
-        <GoogleLoginButton />
 
         <div className="login-footer">
           <p>Belum punya akun? <a href="/signup">Daftar di sini</a></p>

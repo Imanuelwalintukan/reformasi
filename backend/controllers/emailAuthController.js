@@ -1,4 +1,4 @@
-// controllers/authController.js
+// controllers/emailAuthController.js
 // Simple in-memory storage for users (for development/testing)
 const users = new Map();
 const sessions = new Map(); // Store active sessions
@@ -8,51 +8,11 @@ function generateSessionToken() {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
-const register = async (req, res) => {
+const emailLogin = async (req, res) => {
   try {
-    const { email, full_name, password } = req.body; // Menerima password juga untuk kompatibilitas frontend
+    const { email } = req.body;
 
-    // Validasi input
-    if (!email || !full_name) {
-      return res.status(400).json({ error: 'Email dan full_name wajib diisi' });
-    }
-
-    // Simple email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Format email tidak valid' });
-    }
-
-    // Check if user already exists
-    if (users.has(email)) {
-      return res.status(400).json({ error: 'User dengan email ini sudah terdaftar' });
-    }
-
-    // Create new user
-    const user = {
-      id: Date.now().toString(), // Simple ID generation
-      email: email,
-      full_name: full_name,
-      created_at: new Date().toISOString()
-    };
-
-    users.set(email, user);
-
-    res.status(201).json({
-      message: 'User registered successfully',
-      user: user
-    });
-  } catch (error) {
-    console.error('Server error during registration:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
-
-const login = async (req, res) => {
-  try {
-    const { email, password } = req.body; // Menerima password juga untuk kompatibilitas frontend
-
-    // Validasi input - hanya email yang wajib
+    // Validate input
     if (!email) {
       return res.status(400).json({ error: 'Email wajib diisi' });
     }
@@ -63,12 +23,11 @@ const login = async (req, res) => {
       return res.status(400).json({ error: 'Format email tidak valid' });
     }
 
-    // Check if user exists, if not create a new one (for email-only login)
+    // Check if user exists, if not create a new one
     let user = users.get(email);
     if (!user) {
-      // Auto-create user on login if doesn't exist (email-only auth)
       user = {
-        id: Date.now().toString(),
+        id: Date.now().toString(), // Simple ID generation
         email: email,
         created_at: new Date().toISOString(),
         last_login: new Date().toISOString()
@@ -77,53 +36,34 @@ const login = async (req, res) => {
     } else {
       // Update last login time
       user.last_login = new Date().toISOString();
-      // Update the user in the map
       users.set(email, user);
     }
 
     // Generate a session token
     const sessionToken = generateSessionToken();
-
+    
     // Store the session
     const sessionData = {
       user: user,
       created_at: new Date().toISOString(),
       expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
     };
-
+    
     sessions.set(sessionToken, sessionData);
 
+    // Return user data and session token
     res.json({
-      message: 'Login successful',
+      message: 'Login berhasil',
       user: user,
       session_token: sessionToken
     });
   } catch (error) {
-    console.error('Server error during login:', error);
+    console.error('Server error during email login:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-const logout = (req, res) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Authorization token required' });
-    }
-
-    const sessionToken = authHeader.substring(7); // Remove 'Bearer ' prefix
-
-    // Remove the session
-    sessions.delete(sessionToken);
-
-    res.json({ message: 'Logout successful' });
-  } catch (error) {
-    console.error('Server error during logout:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
-
-const getUser = (req, res) => {
+const getUserFromSession = (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -152,6 +92,25 @@ const getUser = (req, res) => {
   }
 };
 
+const logout = (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Authorization token required' });
+    }
+
+    const sessionToken = authHeader.substring(7); // Remove 'Bearer ' prefix
+    
+    // Remove the session
+    sessions.delete(sessionToken);
+
+    res.json({ message: 'Logout berhasil' });
+  } catch (error) {
+    console.error('Server error during logout:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 // Add function to get all users (for debugging only)
 const getAllUsers = (req, res) => {
   try {
@@ -164,9 +123,8 @@ const getAllUsers = (req, res) => {
 };
 
 module.exports = {
-  register,
-  login,
+  emailLogin,
+  getUserFromSession,
   logout,
-  getUser,
   getAllUsers
 };

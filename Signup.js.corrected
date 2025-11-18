@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext'; // Tambahkan import useAuth
-import GoogleLoginButton from './GoogleLoginButton';
+import { useAuth } from './AuthContext';
 import './Signup.css';
 
 const Signup = () => {
-  const { login } = useAuth(); // Gunakan fungsi login dari auth context
   const [formData, setFormData] = useState({
     full_name: '',
-    email: '',
-    password: '',
-    confirm_password: ''
+    email: ''
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -29,24 +26,9 @@ const Signup = () => {
     setIsLoading(true);
     setError('');
 
-    // Validasi password
-    if (formData.password !== formData.confirm_password) {
-      setError('Password dan konfirmasi password tidak cocok');
-      setIsLoading(false);
-      return;
-    }
-
-    // Validasi panjang password
-    if (formData.password.length < 6) {
-      setError('Password minimal 6 karakter');
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      // Kita akan menggunakan endpoint dummy login untuk registrasi juga
-      // karena untuk dummy login kita hanya perlu email dan full_name
-      const response = await fetch('/api/dummy/login', {
+      // Gunakan endpoint register baru yang hanya membutuhkan email dan full_name
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,26 +45,13 @@ const Signup = () => {
         throw new Error(data.error || 'Registrasi gagal. Silakan coba lagi.');
       }
 
-      // Arahkan ke halaman login
+      // Arahkan ke halaman login setelah registrasi berhasil
       navigate('/login');
     } catch (error) {
       setError(error.message);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleGoogleSuccess = (data) => {
-    console.log('Dummy login successful:', data);
-    // Gunakan fungsi login dari auth context dengan data user dari response
-    login(data);
-    // Jika pengguna login dengan dummy account, redirect ke halaman utama
-    navigate('/');
-  };
-
-  const handleGoogleError = (error) => {
-    setError('Dummy login gagal. Silakan coba lagi.');
-    console.error('Dummy login error:', error);
   };
 
   return (
@@ -120,40 +89,10 @@ const Signup = () => {
             />
           </div>
 
-          <div className="input-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="confirm_password">Konfirmasi Password</label>
-            <input
-              type="password"
-              id="confirm_password"
-              name="confirm_password"
-              value={formData.confirm_password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
           <button type="submit" className="signup-btn" disabled={isLoading}>
             {isLoading ? 'Memproses...' : 'Daftar'}
           </button>
         </form>
-
-        <div className="divider">
-          <span>atau daftar dengan</span>
-        </div>
-
-        <GoogleLoginButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
 
         <div className="signup-footer">
           <p>Sudah punya akun? <a href="/login">Masuk di sini</a></p>

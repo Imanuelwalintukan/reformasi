@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 5001;
+const port = process.env.PORT || 9000;
 
 // Middleware
 const isProduction = process.env.NODE_ENV === 'production';
@@ -25,6 +25,7 @@ app.get('/', (req, res) => {
 // Import routes
 const productsRouter = require('./routes/products');
 const authRouter = require('./routes/auth');
+const emailAuthRouter = require('./routes/emailAuth');
 const usersRouter = require('./routes/users');
 const midtransRouter = require('./routes/midtrans');
 const dummyAuthRouter = require('./routes/dummyAuth');
@@ -32,6 +33,7 @@ const dummyAuthRouter = require('./routes/dummyAuth');
 // Use routes
 app.use('/api/products', productsRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/email-auth', emailAuthRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/midtrans', midtransRouter);
 
