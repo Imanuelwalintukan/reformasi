@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useCart } from '../components/CartContext';
-import { useWishlist } from '../components/WishlistContext';
 import { convertToRupiah } from '../utils/currencyFormatter';
 import WishlistButton from '../components/WishlistButton';
 import ProductReviews from '../components/ProductReviews';
@@ -11,7 +10,6 @@ import './ProductDetailPage.css';
 const ProductDetailPage = () => {
   const { id } = useParams();
   const { addToCart } = useCart();
-  const { isInWishlist } = useWishlist();
   const [product, setProduct] = useState(null);
   const [averageRating, setAverageRating] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);

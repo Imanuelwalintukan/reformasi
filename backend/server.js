@@ -9,11 +9,13 @@ const port = process.env.PORT || 9000;
 const isProduction = process.env.NODE_ENV === 'production';
 const corsOrigin = isProduction
   ? ['https://reformasi.my.id']
-  : ['http://localhost:3000', 'http://localhost:3001'];
+  : ['http://localhost:3000'];
 
 app.use(cors({
   origin: corsOrigin,
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 

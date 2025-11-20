@@ -29,34 +29,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Fungsi logout
-  const logout = async () => {
-    try {
-      // Hapus token dari localStorage
-      const token = localStorage.getItem('session_token');
+  // Fungsi logout - tanpa koneksi backend
+  const logout = () => {
+    // Hapus data dari localStorage
+    localStorage.removeItem('auth_user');
+    localStorage.removeItem('session_token');
 
-      if (token) {
-        // Kirim request logout ke server (opsional)
-        await fetch('/api/auth/logout', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }).catch(() => {
-          // Jika logout gagal, lanjutkan proses logout client-side
-          console.log('Logout request failed, continuing with local logout');
-        });
-      }
-    } catch (error) {
-      console.error('Error during logout request:', error);
-    } finally {
-      // Hapus data dari localStorage
-      localStorage.removeItem('auth_user');
-      localStorage.removeItem('session_token');
-
-      setUser(null);
-    }
+    setUser(null);
   };
 
   // Cek apakah ada user di localStorage saat halaman dimuat

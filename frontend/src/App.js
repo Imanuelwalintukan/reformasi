@@ -11,7 +11,6 @@ import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import CartPage from './pages/CartPage';
-import ProductsPage from './pages/ProductsPage';
 import ProductsUnder50 from './pages/ProductsUnder50';
 import ProductDetailPage from './pages/ProductDetailPage';
 import WishlistPage from './pages/WishlistPage';

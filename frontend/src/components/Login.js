@@ -26,26 +26,36 @@ const Login = () => {
     setIsLoading(true);
     setError('');
 
+    // Validasi input
+    if (!credentials.email) {
+      setError('Email wajib diisi');
+      setIsLoading(false);
+      return;
+    }
+
+    // Validasi format email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(credentials.email)) {
+      setError('Format email tidak valid');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // Gunakan endpoint login baru yang hanya membutuhkan email, namun tetap bisa menerima password jika diperlukan
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Simulasikan login hanya dengan data lokal
+      const userId = Date.now().toString(); // ID sementara untuk user
+      const userData = {
+        user: {
+          id: userId,
+          email: credentials.email,
+          full_name: credentials.email.split('@')[0] || 'Pengguna', // Gunakan nama sebelum @ sebagai nama
+          created_at: new Date().toISOString()
         },
-        body: JSON.stringify({
-          email: credentials.email
-        }),
-      });
+        session_token: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+      };
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Login gagal. Periksa kembali email Anda.');
-      }
-
-      // Gunakan fungsi login dari context dengan data user dari response
-      login(data);
+      // Gunakan fungsi login dari context
+      login(userData);
 
       // Arahkan ke halaman utama
       navigate('/');
@@ -89,7 +99,6 @@ const Login = () => {
               value={credentials.password}
               onChange={handleChange}
               placeholder="masukkan password Anda"
-              required
             />
           </div>
 

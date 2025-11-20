@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { convertToRupiah } from '../utils/currencyFormatter';
 import './MidtransPayment.css';
 
-const MidtransPayment = ({ 
-  totalAmount, 
-  orderDetails, 
-  onPaymentSuccess, 
+const MidtransPayment = ({
+  totalAmount,
+  orderDetails,
+  onPaymentSuccess,
   onPaymentFailure,
-  onCancel 
+  onCancel
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
@@ -27,18 +27,18 @@ const MidtransPayment = ({
     script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
     script.setAttribute('data-client-key', process.env.REACT_APP_MIDTRANS_CLIENT_KEY || 'Mid-client-o7lFKhedQ-2GDdx0');
     script.async = true;
-    
+
     script.onload = () => {
       console.log('Midtrans Snap script loaded successfully');
       setScriptLoaded(true);
     };
-    
+
     script.onerror = () => {
       console.error('Failed to load Midtrans Snap script');
       setScriptError(true);
       setScriptLoaded(false);
     };
-    
+
     document.body.appendChild(script);
 
     // Cleanup function to remove script
@@ -54,9 +54,9 @@ const MidtransPayment = ({
       alert('Payment system is not ready yet. Please try again in a moment.');
       return;
     }
-    
+
     setIsProcessing(true);
-    
+
     try {
       // Prepare order details for the backend
       const orderData = {
@@ -79,8 +79,15 @@ const MidtransPayment = ({
 
       console.log('Creating Midtrans transaction with data:', orderData);
 
+      // Determine API URL based on environment
+      const apiUrl = process.env.NODE_ENV === 'production'
+        ? '/api/midtrans/transaction'  // For production deployment
+        : 'http://localhost:9000/api/midtrans/transaction'; // For development
+
       // Call backend to create Midtrans transaction
-      const response = await fetch('http://localhost:5001/api/midtrans/transaction', {
+      console.log('Attempting to connect to backend:', apiUrl);
+
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +95,9 @@ const MidtransPayment = ({
         body: JSON.stringify(orderData),
       });
 
+      console.log('Response status:', response.status);
       const result = await response.json();
+      console.log('Response data:', result);
 
       if (!result.success) {
         throw new Error(result.error || 'Failed to create payment transaction');
@@ -103,7 +112,7 @@ const MidtransPayment = ({
           onSuccess: function(resultData) {
             console.log('Payment Success:', resultData);
             setIsProcessing(false);
-            
+
             // Process successful payment
             const paymentResponse = {
               transactionId: resultData.transaction_id,
@@ -114,13 +123,13 @@ const MidtransPayment = ({
               ...orderDetails,
               ...resultData
             };
-            
+
             onPaymentSuccess(paymentResponse);
           },
           onPending: function(resultData) {
             console.log('Payment Pending:', resultData);
             setIsProcessing(false);
-            
+
             // Handle pending payment (e.g., bank transfer)
             const paymentResponse = {
               transactionId: resultData.transaction_id,
@@ -131,13 +140,13 @@ const MidtransPayment = ({
               ...orderDetails,
               ...resultData
             };
-            
+
             onPaymentSuccess(paymentResponse);
           },
           onError: function(resultData) {
             console.log('Payment Error:', resultData);
             setIsProcessing(false);
-            
+
             // Handle payment failure
             onPaymentFailure({
               error: resultData.status_message || 'Payment failed',
@@ -147,7 +156,7 @@ const MidtransPayment = ({
           onClose: function() {
             console.log('Payment closed by user');
             setIsProcessing(false);
-            
+
             // Handle when user closes the popup
             onPaymentFailure({
               error: 'Payment cancelled by user',
@@ -160,16 +169,16 @@ const MidtransPayment = ({
       }
     } catch (error) {
       console.error('Error processing Midtrans payment:', error);
-      
+
       // More specific error handling
       let errorMessage = 'Payment failed. Please try again.';
       if (error.message) {
         errorMessage = error.message;
       }
-      
+
       // Menampilkan pesan error yang lebih spesifik
       alert(`Payment Error: ${errorMessage}`);
-      
+
       setIsProcessing(false);
       onPaymentFailure({
         error: errorMessage,
@@ -214,7 +223,7 @@ const MidtransPayment = ({
       </div>
 
       <div className="payment-method-selector">
-        <div 
+        <div
           className="selected-payment-method"
           onClick={() => setShowPaymentOptions(!showPaymentOptions)}
         >
@@ -250,8 +259,8 @@ const MidtransPayment = ({
         <button className="cancel-payment-btn" onClick={onCancel}>
           Cancel
         </button>
-        <button 
-          className="confirm-payment-btn" 
+        <button
+          className="confirm-payment-btn"
           onClick={handlePayment}
           disabled={isProcessing || !scriptLoaded}
         >

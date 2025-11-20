@@ -339,6 +339,9 @@ const CartPage = () => {
             <button className="checkout-btn" onClick={handleCheckout}>
               Proceed to Checkout
             </button>
+            <button className="clear-cart-btn" onClick={clearCart}>
+              Clear Cart
+            </button>
             <div className="faq-link-section">
               <p>Need help? <a href="/faq" className="text-earthen-primary hover:underline">Check our FAQ</a></p>
             </div>

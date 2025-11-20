@@ -1,6 +1,6 @@
 // Algoritma rekomendasi produk yang lebih canggih
 import products from '../products';
-import knowledgeBase, { findRelevantInformation } from './knowledgeBase';
+import { findRelevantInformation } from './knowledgeBase';
 
 // Fungsi untuk merekomendasikan produk berdasarkan beberapa kriteria
 export const getAdvancedRecommendations = (userPreferences) => {

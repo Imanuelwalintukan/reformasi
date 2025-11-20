@@ -17,9 +17,9 @@ const ContactPage = () => {
             <p><strong>WhatsApp:</strong> +62 812-3456-7890</p>
           </div>
           <div className="contact-socials">
-            <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="#" target="_blank" rel="noopener noreferrer">Pinterest</a>
-            <a href="#" target="_blank" rel="noopener noreferrer">Facebook</a>
+            <a href="https://www.instagram.com/earthen_collective" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://www.pinterest.com/earthen_collective" target="_blank" rel="noopener noreferrer">Pinterest</a>
+            <a href="https://www.facebook.com/earthen_collective" target="_blank" rel="noopener noreferrer">Facebook</a>
           </div>
         </div>
         <div className="contact-form-section">

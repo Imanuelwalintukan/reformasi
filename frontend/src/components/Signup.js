@@ -40,26 +40,38 @@ const Signup = () => {
       return;
     }
 
+    // Validasi format email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Format email tidak valid');
+      setIsLoading(false);
+      return;
+    }
+
+    // Validasi nama lengkap
+    if (!formData.full_name.trim()) {
+      setError('Nama lengkap wajib diisi');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // Gunakan endpoint register baru yang hanya membutuhkan email dan full_name,
-      // namun tetap kirim password untuk kompatibilitas frontend
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      // Simulasikan registrasi lokal tanpa koneksi backend
+      // Dalam sistem tanpa backend, kita hanya perlu membuat user dan menyimpan di localStorage
+      const userId = Date.now().toString();
+      const userData = {
+        user: {
+          id: userId,
           email: formData.email,
           full_name: formData.full_name,
-          password: formData.password
-        }),
-      });
+          created_at: new Date().toISOString()
+        },
+        session_token: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+      };
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Registrasi gagal. Silakan coba lagi.');
-      }
+      // Simpan data user ke localStorage
+      localStorage.setItem('auth_user', JSON.stringify(userData.user));
+      localStorage.setItem('session_token', userData.session_token);
 
       // Arahkan ke halaman login setelah registrasi berhasil
       navigate('/login');

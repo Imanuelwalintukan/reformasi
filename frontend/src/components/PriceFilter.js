@@ -1,21 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const PriceFilter = ({ onFilterChange, products }) => {
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(100);
   const [sortBy, setSortBy] = useState('default');
   const [tempMaxPrice, setTempMaxPrice] = useState(100);
 
-  // Update tempMaxPrice when maxPrice changes
-  useEffect(() => {
-    setTempMaxPrice(maxPrice);
-  }, [maxPrice]);
-
   const handleApplyFilter = () => {
-    onFilterChange({ 
-      minPrice, 
-      maxPrice: tempMaxPrice, 
-      sortBy 
+    onFilterChange({
+      minPrice,
+      maxPrice: tempMaxPrice,
+      sortBy
     });
   };
 
